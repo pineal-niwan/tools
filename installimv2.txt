@@ -1,0 +1,85 @@
+clone_project(){
+    echo "init $1"
+    git clone $2
+    cd $1
+    git checkout -b dev origin/dev
+    cd ..
+}
+
+mkdir im
+cd im
+
+mkdir imv2 && cd imv2
+
+clone_project build git@gitlab.qukuaishequ.com:server/im_v2/build.git
+clone_project api git@gitlab.qukuaishequ.com:server/im_v2/api.git
+clone_project lib git@gitlab.qukuaishequ.com:server/im_v2/lib.git
+clone_project doc git@gitlab.qukuaishequ.com:server/im_v2/doc.git
+
+# git oauth
+mkdir oauth && cd oauth
+# git some project
+cd ..
+
+# git dservice
+mkdir dservice && cd dservice
+clone_project file git@gitlab.qukuaishequ.com:server/im_v2/dservice/file.git
+clone_project follow git@gitlab.qukuaishequ.com:server/im_v2/dservice/follow.git
+clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/dservice/sync.git
+clone_project message git@gitlab.qukuaishequ.com:server/im_v2/dservice/message.git
+clone_project dialog git@gitlab.qukuaishequ.com:server/im_v2/dservice/dialog.git
+clone_project user git@gitlab.qukuaishequ.com:server/im_v2/dservice/user.git
+clone_project contact git@gitlab.qukuaishequ.com:server/im_v2/dservice/contact.git
+clone_project auth git@gitlab.qukuaishequ.com:server/im_v2/dservice/auth.git
+cd ..
+
+# git serverlet
+mkdir serverlet && cd serverlet
+clone_project push git@gitlab.qukuaishequ.com:server/im_v2/serverlet/push.git
+clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/serverlet/sync.git
+clone_project session git@gitlab.qukuaishequ.com:server/im_v2/serverlet/session.git
+clone_project front git@gitlab.qukuaishequ.com:server/im_v2/serverlet/front.git
+
+# biz_module
+mkdir biz_module && cd biz_module
+clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/sync.git
+clone_project auth git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/auth.git
+clone_project file git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/file.git
+clone_project message git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/message.git
+clone_project dialog git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/dialog.git
+clone_project contact git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/contact.git
+clone_project user git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/user.git
+
+cd ..
+# biz_server
+mkdir biz_server && cd biz_server
+clone_project phone git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/phone.git
+clone_project config git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/config.git
+clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/sync.git
+clone_project file git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/file.git
+clone_project oauth git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/oauth.git
+clone_project message git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/message.git
+clone_project follow git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/follow.git
+clone_project contact git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/contact.git
+clone_project user git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/user.git
+clone_project auth git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_server/auth.git
+
+cd ..
+
+cd ..
+
+cd ..
+
+# git pineal
+mkdir pineal && cd pineal
+
+clone_project busybox git@gitlab.qukuaishequ.com:pineal/busybox.git
+clone_project middleware git@gitlab.qukuaishequ.com:pineal/middleware.git
+clone_project cellular git@gitlab.qukuaishequ.com:pineal/cellular.git
+clone_project thirdparty git@gitlab.qukuaishequ.com:pineal/thirdparty.git
+
+# git serverlet
+mkdir serverlet && cd serverlet
+
+clone_project raftkv git@gitlab.qukuaishequ.com:pineal/serverlet/raftkv.git
+clone_project identcode git@gitlab.qukuaishequ.com:pineal/serverlet/identcode.git
