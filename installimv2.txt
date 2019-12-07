@@ -42,6 +42,7 @@ clone_project front git@gitlab.qukuaishequ.com:server/im_v2/serverlet/front.git
 
 # biz_module
 mkdir biz_module && cd biz_module
+clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/upload.git
 clone_project sync git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/sync.git
 clone_project auth git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/auth.git
 clone_project file git@gitlab.qukuaishequ.com:server/im_v2/serverlet/biz_module/file.git
@@ -82,4 +83,5 @@ clone_project thirdparty git@gitlab.qukuaishequ.com:pineal/thirdparty.git
 mkdir serverlet && cd serverlet
 
 clone_project raftkv git@gitlab.qukuaishequ.com:pineal/serverlet/raftkv.git
+clone_project raftkv git@gitlab.qukuaishequ.com:pineal/serverlet/kvconsole.git
 clone_project identcode git@gitlab.qukuaishequ.com:pineal/serverlet/identcode.git
