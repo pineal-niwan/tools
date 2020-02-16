@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ssh-keygen
+ssh-copy-id hdd1
+ssh-copy-id hdd2
+ssh-copy-id hdd3
+ssh-copy-id hdd4
+ssh-copy-id hdd5
+ssh-copy-id hds1
+ssh-copy-id hds2
+ssh-copy-id hds3

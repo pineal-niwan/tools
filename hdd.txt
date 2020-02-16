@@ -1,0 +1,64 @@
+#!/bin/sh
+
+#Disable firewall
+ufw disable
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+#Disable Huge page
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+cat >> /etc/rc.local << EOF
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+   echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+if -f /sys/kernel/mm/transparent_hugepage/defrag; then
+   echo never > /sys/kernel/mm/transparent_hugepage/defrag
+fi
+EOF
+chmod +x /etc/rc.local
+
+#setup host names
+touch /etc/hosts
+cat>>/etc/hosts<<EOF
+127.0.0.1       localhost
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost       ip6-localhost   ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+172.24.94.212 ambari
+172.24.94.208 hdd1
+172.24.94.207 hdd2
+172.24.94.210 hdd3
+172.24.94.211 hdd4
+172.24.94.209 hdd5
+172.24.94.204 hds1
+172.24.94.206 hds2
+172.24.94.205 hds3
+EOF
+
+#install ntp
+apt update
+apt install ntp -y
+update-rc.d ntp defaults
+
+#Add ambari account
+adduser --disabled-password --gecos "" ambari
+echo "ambari:NKQ89q3KAF434JA" | chpasswd
+echo "ambari ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+#install xfs
+mkdir -p /data
+apt update
+apt install xfsprogs
+fdisk /dev/vdb
+mkfs.xfs -f /dev/vdb1
+echo "/dev/vdb1 /data xfs defaults 0 0" >> /etc/fstab

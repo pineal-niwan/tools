@@ -1,0 +1,12 @@
+#apt install ambari server
+cd /etc/apt/sources.list.d
+wget http://172.24.94.212/ambari.list
+wget http://172.24.94.212/hdp.list
+wget http://172.24.94.212/hdp.gpl.list
+
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
+sudo apt-get update
+apt-cache showpkg ambari-server
+apt-cache showpkg ambari-agent
+apt-cache showpkg ambari-metrics-assembly
+apt install ambari-agent

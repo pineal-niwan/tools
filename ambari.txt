@@ -1,0 +1,105 @@
+#!/bin/sh
+
+#Disable firewall
+ufw disable
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+#Disable Huge page
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+cat >> /etc/rc.local << EOF
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+   echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+if -f /sys/kernel/mm/transparent_hugepage/defrag; then
+   echo never > /sys/kernel/mm/transparent_hugepage/defrag
+fi
+EOF
+chmod +x /etc/rc.local
+
+#setup host names
+touch /etc/hosts
+cat>>/etc/hosts<<EOF
+127.0.0.1       localhost
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost       ip6-localhost   ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+172.24.94.212 ambari
+172.24.94.208 hdd1
+172.24.94.207 hdd2
+172.24.94.210 hdd3
+172.24.94.211 hdd4
+172.24.94.209 hdd5
+172.24.94.204 hds1
+172.24.94.206 hds2
+172.24.94.205 hds3
+EOF
+
+#install ntp
+apt update
+apt install ntp -y
+update-rc.d ntp defaults
+
+#Add ambari account
+adduser --disabled-password --gecos "" ambari
+echo "ambari:NKQ89q3KAF434JA" | chpasswd
+echo "ambari ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+#setup download file
+su ambari -c "mkdir -p /home/ambari/download;
+cd /home/ambari/download;
+wget https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java_8.0.19-1ubuntu18.04_all.deb;
+wget http://public-repo-1.hortonworks.com/ambari/ubuntu18/2.x/updates/2.7.3.0/ambari-2.7.3.0-ubuntu18.tar.gz;
+wget http://public-repo-1.hortonworks.com/HDP/ubuntu18/3.x/updates/3.1.0.0/HDP-3.1.0.0-ubuntu18-deb.tar.gz;
+wget http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu18/HDP-UTILS-1.1.0.22-ubuntu18.tar.gz;
+wget http://public-repo-1.hortonworks.com/HDP-GPL/ubuntu18/3.x/updates/3.1.0.0/HDP-GPL-3.1.0.0-ubuntu18-gpl.tar.gz;
+wget http://public-repo-1.hortonworks.com/ambari/ubuntu18/2.x/updates/2.7.3.0/ambari.list;
+wget http://public-repo-1.hortonworks.com/HDP/ubuntu18/3.x/updates/3.1.0.0/hdp.list;
+wget http://public-repo-1.hortonworks.com/HDP-GPL/ubuntu18/3.x/updates/3.1.0.0/hdp.gpl.list;
+sed -i 's~public-repo-1.hortonworks.com/ambari/ubuntu18/2.x/updates/2.7.3.0~172.24.94.212/ambari/ubuntu18/2.7.3.0-139~' ambari.list;
+sed -i 's~public-repo-1.hortonworks.com/HDP-GPL/ubuntu18/3.x/updates/3.1.0.0~172.24.94.212/HDP-GPL/ubuntu18/3.1.0.0-78~' hdp.gpl.list;
+sed -i 's~public-repo-1.hortonworks.com/HDP/ubuntu18/3.x/updates/3.1.0.0~172.24.94.212/HDP/ubuntu18/3.1.0.0-78~' hdp.list;
+sed -i 's~public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu18~172.24.94.212/HDP-UTILS/ubuntu18/1.1.0.22~' hdp.list"
+
+#install and setup nginx
+apt update
+apt install nginx -y
+apt install mysql-server -y
+rm /etc/nginx/sites-enabled/default
+touch /etc/nginx/sites-enabled/download
+cat>>/etc/nginx/sites-enabled/download<<EOF
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name 172.24.94.212;
+
+    root /home/ambari/download;
+
+    location ^~ / {
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_localtime on;
+    }
+
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+}
+EOF
+systemctl restart nginx
+
+#install mysql
+apt install mysql-server -y
