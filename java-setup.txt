@@ -7,6 +7,7 @@ wget http://172.24.94.212/jdk-8u241-linux-x64.tar.gz;
 tar xfz jdk-8u241-linux-x64.tar.gz"
 
 touch /etc/environment
+truncate -s 0 /etc/environment
 cat >> /etc/environment << EOF
 JAVA_HOME=/home/ambari/jdk1.8.0_241
 PATH="$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"

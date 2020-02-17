@@ -26,6 +26,7 @@ chmod +x /etc/rc.local
 
 #setup host names
 touch /etc/hosts
+truncate -s 0 /etc/hosts
 cat>>/etc/hosts<<EOF
 127.0.0.1       localhost
 
@@ -74,9 +75,9 @@ sed -i 's~public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/ubuntu18~172.24
 #install and setup nginx
 apt update
 apt install nginx -y
-apt install mysql-server -y
 rm /etc/nginx/sites-enabled/default
 touch /etc/nginx/sites-enabled/download
+truncate -s 0 /etc/nginx/sites-enabled/download
 cat>>/etc/nginx/sites-enabled/download<<EOF
 server {
     listen 80;

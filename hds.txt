@@ -26,6 +26,7 @@ chmod +x /etc/rc.local
 
 #setup host names
 touch /etc/hosts
+truncate -s 0 /etc/hosts
 cat>>/etc/hosts<<EOF
 127.0.0.1       localhost
 

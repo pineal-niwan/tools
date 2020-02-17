@@ -26,6 +26,7 @@ chmod +x /etc/rc.local
 
 #setup host names
 touch /etc/hosts
+truncate -s 0 /etc/hosts
 cat>>/etc/hosts<<EOF
 127.0.0.1       localhost
 
@@ -58,7 +59,7 @@ echo "ambari ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 #install xfs
 mkdir -p /data
 apt update
-apt install xfsprogs
-fdisk /dev/vdb
-mkfs.xfs -f /dev/vdb1
+apt install xfsprogs -y
+#fdisk /dev/vdb
+#mkfs.xfs -f /dev/vdb1
 echo "/dev/vdb1 /data xfs defaults 0 0" >> /etc/fstab
